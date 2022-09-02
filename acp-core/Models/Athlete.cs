@@ -8,7 +8,7 @@ namespace acp_core.Models
     public class Athlete : IdentityUser, IFirebaseEntity
     {
         [FirestoreProperty]
-        new public string Id { get; set; }
+        override public string Id { get; set; }
         [FirestoreProperty]
         [PersonalData]
         public string? FirstName { get; set; }
