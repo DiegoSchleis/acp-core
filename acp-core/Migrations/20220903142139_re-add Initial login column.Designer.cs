@@ -12,8 +12,8 @@ using acp_core.Data;
 namespace acp_core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220903092139_change db")]
-    partial class changedb
+    [Migration("20220903142139_re-add Initial login column")]
+    partial class readdInitiallogincolumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace acp_core.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
@@ -58,6 +61,9 @@ namespace acp_core.Migrations
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("InitialLogin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");

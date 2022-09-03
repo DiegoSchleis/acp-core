@@ -12,8 +12,8 @@ using acp_core.Data;
 namespace acp_core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220903094539_add avatar property")]
-    partial class addavatarproperty
+    [Migration("20220903140528_remove Initial login column")]
+    partial class removeInitiallogincolumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

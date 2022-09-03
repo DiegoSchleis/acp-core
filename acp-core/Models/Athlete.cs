@@ -9,6 +9,7 @@ namespace acp_core.Models
     {
         [FirestoreProperty]
         override public string Id { get; set; }
+        public bool InitialLogin { get; set; } = true;
         [FirestoreProperty]
         [PersonalData]
         public string? FirstName { get; set; }

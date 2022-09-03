@@ -15,12 +15,14 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace acp_core.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<Athlete> _signInManager;
+        private readonly UserManager<Athlete> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<Athlete> signInManager, ILogger<LoginModel> logger)

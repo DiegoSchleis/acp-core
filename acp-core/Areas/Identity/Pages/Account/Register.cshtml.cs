@@ -31,14 +31,14 @@ namespace acp_core.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Athlete> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly FirestoreProvider _firestoreProvider;
+        //private readonly FirestoreProvider _firestoreProvider;
 
         public RegisterModel(
             UserManager<Athlete> userManager,
             IUserStore<Athlete> userStore,
             SignInManager<Athlete> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, FirestoreProvider firestoreProvider)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,7 +46,7 @@ namespace acp_core.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _firestoreProvider = firestoreProvider;
+            //_firestoreProvider = firestoreProvider;
         }
 
         /// <summary>

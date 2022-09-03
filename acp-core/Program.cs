@@ -21,13 +21,13 @@ builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddDefaultIdentity<Athlete>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddSingleton(_ => new FirestoreProvider(
-    new FirestoreDbBuilder
-    {
-        ProjectId = "acp-core",
-        JsonCredentials = File.ReadAllText("C:\\Users\\diego.schleis\\Dropbox42 Dropbox\\Diego Schleis\\PC\\Documents\\acp-core\\acp-core\\Properties\\acp-core-firebase-adminsdk-efj4n-cff685fb0d.json") // <-- service account json file
-    }.Build()
-));
+//builder.Services.AddSingleton(_ => new FirestoreProvider(
+//    new FirestoreDbBuilder
+//    {
+//        ProjectId = "acp-core",
+//        JsonCredentials = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "\\Properties\\acp-core-firebase-adminsdk-efj4n-cff685fb0d.json")) // <-- service account json file
+//    }.Build()
+//));
 
 builder.Services.AddControllersWithViews();
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace acp_core.Migrations
 {
-    public partial class RenamendIdentityTableNames : Migration
+    public partial class newdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,6 +42,7 @@ namespace acp_core.Migrations
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     MaximalHeartRate = table.Column<int>(type: "int", nullable: true),
                     FunctionalThresholdPower = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
