@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using acp_core.Util;
 
 namespace acp_core.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,14 @@ namespace acp_core.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Athlete> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly FirestoreProvider _firestoreProvider;
 
         public RegisterModel(
             UserManager<Athlete> userManager,
             IUserStore<Athlete> userStore,
             SignInManager<Athlete> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, FirestoreProvider firestoreProvider)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace acp_core.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _firestoreProvider = firestoreProvider;
         }
 
         /// <summary>
@@ -79,6 +82,14 @@ namespace acp_core.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+            [Required]
+            [PersonalData]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [Required]
+            [PersonalData]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -117,12 +128,14 @@ namespace acp_core.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.FirstName = !string.IsNullOrEmpty(Input.FirstName) ? Input.FirstName: string.Empty;
+                user.LastName = !string.IsNullOrEmpty(Input.LastName) ? Input.LastName: string.Empty;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    //_firestoreProvider.AddOrUpdate(user, CancellationToken.None);
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

@@ -32,5 +32,7 @@ namespace acp_core.Models
         public int? MaximalHeartRate { get; set; }
         [FirestoreProperty]
         public int? FunctionalThresholdPower { get; set; }
+        [FirestoreProperty]
+        public byte[]? Avatar { get; set; }
     }
 }

@@ -25,7 +25,7 @@ builder.Services.AddSingleton(_ => new FirestoreProvider(
     new FirestoreDbBuilder
     {
         ProjectId = "acp-core",
-        JsonCredentials = File.ReadAllText("C:\\Users\\Diego\\source\\repos\\acp-core\\acp-core\\Properties\\acp-core-firebase-adminsdk-efj4n-cff685fb0d.json") // <-- service account json file
+        JsonCredentials = File.ReadAllText("C:\\Users\\diego.schleis\\Dropbox42 Dropbox\\Diego Schleis\\PC\\Documents\\acp-core\\acp-core\\Properties\\acp-core-firebase-adminsdk-efj4n-cff685fb0d.json") // <-- service account json file
     }.Build()
 ));
 
