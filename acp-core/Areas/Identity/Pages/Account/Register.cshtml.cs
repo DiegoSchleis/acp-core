@@ -10,10 +10,9 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
-using acp_core.Models;
-using acp_core.Util;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using acp_core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -31,14 +30,13 @@ namespace acp_core.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Athlete> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly FirestoreProvider _firestoreprovider;
 
         public RegisterModel(
             UserManager<Athlete> userManager,
             IUserStore<Athlete> userStore,
             SignInManager<Athlete> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, FirestoreProvider firestoreProvider)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,7 +44,6 @@ namespace acp_core.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _firestoreprovider = firestoreProvider;
         }
 
         /// <summary>
@@ -117,8 +114,7 @@ namespace acp_core.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-                user.Id = Guid.NewGuid().ToString();
-                await _firestoreprovider.AddOrUpdate(user, CancellationToken.None);
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
