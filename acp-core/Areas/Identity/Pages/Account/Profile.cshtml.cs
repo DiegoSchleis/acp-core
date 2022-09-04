@@ -1,21 +1,17 @@
 using acp_core.Models;
-using acp_core.Util;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Security.Claims;
 
 namespace acp_core.Areas.Identity.Pages.Account
 {
-    public class FinishSetupModel : PageModel
+    public class ProfileModel : PageModel
     {
         private readonly UserManager<Athlete> _userManager;
         private readonly SignInManager<Athlete> _signInManager;
 
-        public FinishSetupModel(
+        public ProfileModel(
             UserManager<Athlete> userManager,
             SignInManager<Athlete> signInManager)
         {
@@ -23,14 +19,11 @@ namespace acp_core.Areas.Identity.Pages.Account
             _signInManager = signInManager;
         }
 
-        /// <summary> 
+        /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
-        public List<SelectListItem> Countries { get; set; }
-        public List<SelectListItem> Genders { get; set; }
-        public byte[] RandomImage { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -56,7 +49,6 @@ namespace acp_core.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            ///             [Phone]
             [Display(Name = "Username")]
             public string Username { get; set; }
             [Phone]
@@ -93,38 +85,25 @@ namespace acp_core.Areas.Identity.Pages.Account
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
                 Username = userName,
-                Avatar = ImageHelper.GenerateRandomImageAsBytes(350, 350)
-            };
-
-            var countryList = new List<SelectListItem>();
-            var isoList = ISO3166.Country.List.OrderBy(x => x.Name);
-            for (var i = 0; i < isoList.Count(); i++)
-            {
-                countryList.Add(new SelectListItem { Value = i.ToString(), Text = isoList.ElementAt(i).Name });
-            }
-            Countries = countryList;
-
-            Genders = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "Male" },
-                new SelectListItem { Value = "2", Text = "Female" }
+                PhoneNumber = phoneNumber,
+                Avatar = user.Avatar,
+                Gender = user.Gender,
+                Weight = user.Weight,
+                BirthDate = user.BirthDate,
+                MaximalHeartRate = user.MaximalHeartRate,
+                FunctionalThresholdPower = user.FunctionalThresholdPower,
+                Description = user.Description,
+                Nationality = user.Nationality
             };
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user.");
-            }
-            else if (!user.InitialLogin)
-            {
-                var returnUrl = Url.Content("~/");
-                return LocalRedirect(returnUrl);
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -144,15 +123,11 @@ namespace acp_core.Areas.Identity.Pages.Account
                 await LoadAsync(user);
                 return Page();
             }
-            user.InitialLogin = false;
-            if (user.UserName != Input.Username)
-                user.UserName = Input.Username;
-
             user.BirthDate = Input.BirthDate;
-            user.Weight = Input.Weight;
+            user.Weight = Input.Weight != null ? Input.Weight : user.Weight;
             user.Description = Input.Description;
-            user.MaximalHeartRate = Input.MaximalHeartRate;
-            user.FunctionalThresholdPower = Input.FunctionalThresholdPower;
+            user.MaximalHeartRate = Input.MaximalHeartRate != null ? Input.MaximalHeartRate : user.MaximalHeartRate;
+            user.FunctionalThresholdPower = Input.FunctionalThresholdPower != null ? Input.FunctionalThresholdPower : user.FunctionalThresholdPower;
 
             if (Request.Form != null && Request.Form.Files.Count > 0)
             {
@@ -166,10 +141,6 @@ namespace acp_core.Areas.Identity.Pages.Account
                     }
                 }
             }
-            else
-            {
-                user.Avatar = ImageHelper.GenerateRandomImageAsBytes(350,350);
-            }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
@@ -181,19 +152,22 @@ namespace acp_core.Areas.Identity.Pages.Account
                     return RedirectToPage();
                 }
             }
+
+            var username = await _userManager.GetUserNameAsync(user);
+            if(username != null && username != Input.Username)
+            {
+                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
+                if (!setUserNameResult.Succeeded)
+                {
+                    StatusMessage = "Error: " +setUserNameResult.Errors.First().Description;
+                    return RedirectToPage();
+                }
+            }
+
             await _userManager.UpdateAsync(user);
-
             await _signInManager.RefreshSignInAsync(user);
-
-            StatusMessage = "Thanks for registering";
-            var returnUrl = Url.Content("~/");
-            return LocalRedirect(returnUrl);
+            StatusMessage = "Your profile has been updated";
+            return RedirectToPage();
         }
-    }
-
-    public static class GendersString
-    {
-        public static string Male = "Male";
-        public static string Female = "Female";
     }
 }
