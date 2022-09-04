@@ -5,12 +5,18 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        @if (UserManager.GetUserAsync(User).Result.Avatar != null)
-        {
-            <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.Avatar))">
-        }
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @if (UserManager.GetUserAsync(User).Result != null && UserManager.GetUserAsync(User).Result.Avatar != null)
+            {
+                <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.Avatar))">
+            }
+                Hello @User.Identity?.Name!
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Profile" title="Manage">Profile</a></li>
+                <li><a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account Settings</a></li>
+            </ul>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
