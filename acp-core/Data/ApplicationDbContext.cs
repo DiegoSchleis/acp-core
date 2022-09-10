@@ -43,6 +43,14 @@ namespace acp_core.Data
             {
                 entity.ToTable("UserTokens");
             });
+            builder.Entity<FriendShip>(entity =>
+            {
+          entity.ToTable(name: "Friendship");
+            });
+                  builder.Entity<PrivacyOptions>(entity =>
+            {
+          entity.ToTable(name: "PrivacyOptions");
+            });
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using acp_core.Data;
 
@@ -11,9 +12,10 @@ using acp_core.Data;
 namespace acp_core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220910085556_Add Friendship table")]
+    partial class AddFriendshiptable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,6 @@ namespace acp_core.Migrations
                     b.Property<decimal?>("Weight")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("privacyoptions_athlete")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -120,8 +119,6 @@ namespace acp_core.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("privacyoptions_athlete");
 
                     b.ToTable("User", "Identity");
                 });
@@ -143,26 +140,6 @@ namespace acp_core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Friendship", "Identity");
-                });
-
-            modelBuilder.Entity("acp_core.Models.PrivacyOptions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("PendingFriendrequests")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrivateProfile")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PublicActivity")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PrivacyOptions", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -300,17 +277,6 @@ namespace acp_core.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", "Identity");
-                });
-
-            modelBuilder.Entity("acp_core.Models.Athlete", b =>
-                {
-                    b.HasOne("acp_core.Models.PrivacyOptions", "PrivacyOptions")
-                        .WithMany()
-                        .HasForeignKey("privacyoptions_athlete")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PrivacyOptions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

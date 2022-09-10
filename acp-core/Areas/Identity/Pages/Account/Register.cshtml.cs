@@ -128,10 +128,10 @@ namespace acp_core.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.FirstName = !string.IsNullOrEmpty(Input.FirstName) ? Input.FirstName: string.Empty;
-                user.LastName = !string.IsNullOrEmpty(Input.LastName) ? Input.LastName: string.Empty;
+                user.FirstName = !string.IsNullOrEmpty(Input.FirstName) ? Input.FirstName : string.Empty;
+                user.LastName = !string.IsNullOrEmpty(Input.LastName) ? Input.LastName : string.Empty;
+                user.PrivacyOptions = new PrivacyOptions();
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

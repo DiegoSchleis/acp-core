@@ -1,6 +1,7 @@
 ﻿using acp_core.Util;
 using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace acp_core.Models
 {
@@ -35,5 +36,7 @@ namespace acp_core.Models
         public int? FunctionalThresholdPower { get; set; }
         [FirestoreProperty]
         public byte[]? Avatar { get; set; }
+        [ForeignKey("privacyoptions_athlete")]
+        public PrivacyOptions PrivacyOptions { get; set; }
     }
 }
